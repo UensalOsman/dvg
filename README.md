@@ -14,7 +14,7 @@ Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle D
 * **Containerisierung:** RabbitMQ läuft via Docker
 
 ## Installation & Ausführung
-(Hier kannst du später noch ergänzen, wie man dein Projekt startet, z.B.:)
+
 1. Docker Container starten: `docker run -d --name rabbitmq -p 5672:5672 rabbitmq`
 2. gRPC Server starten: `python server.py`
 3. Client ausführen: `python client.py`
