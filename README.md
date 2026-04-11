@@ -5,7 +5,7 @@ In diesem Projekt präsentieren wir die 1. Abgabe (Sprint 1) des DVG Moduls
 In diesem ersten Sprint des DVG-Moduls haben wir die Basiskomponenten für ein automatisiertes Rechnungsverarbeitungssystem entwickelt. 
 Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle Datenerfassung zu minimieren.
 
-![Diagramm Name](dia.png)
+![Diagramm Name](images/dia.png)
 
 ## Technologien
 * **Programmiersprache:** Python
@@ -21,4 +21,4 @@ Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle D
 3. gRPC Server starten: `python server.py`
 4. Client ausführen: `python client.py`
 
-![Sequenzdiagramm](seq_dia.png)
+![Sequenzdiagramm](images/seq_dia.png)
