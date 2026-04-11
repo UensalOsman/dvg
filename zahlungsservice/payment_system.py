@@ -50,8 +50,7 @@ class PaymentSystem:
             return False, "Waehrung muss ein 3-stelliger ISO-Code in Grossbuchstaben sein (z.B. EUR)"
 
         return True, "OK"
-    
-    
+        
     def _process_payment(self, data: Dict[str, Any]) -> bool:
         """Zahlungsauftrag verarbeiten"""
         # 1. Validieren
