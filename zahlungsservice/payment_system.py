@@ -4,7 +4,15 @@ import json
 import sqlite3
 import logging
 from typing import Dict, Any
-from config import RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_QUEUE, DB_FILE, LOG_LEVEL
+from config import (
+    RABBITMQ_HOST,
+    RABBITMQ_PORT,
+    RABBITMQ_QUEUE,
+    RABBITMQ_EXCHANGE,
+    RABBITMQ_ROUTING_KEY,
+    DB_FILE,
+    LOG_LEVEL,
+)
 
 # Logging konfigurieren
 logging.basicConfig(
@@ -143,14 +151,26 @@ class PaymentSystem:
             )
             self.channel = self.connection.channel()
             
-            # Queue deklarieren (falls nicht existiert)
+            # Exchange + Queue deklarieren und binden
+            self.channel.exchange_declare(
+                exchange=RABBITMQ_EXCHANGE,
+                exchange_type="direct",
+                durable=True
+            )
             self.channel.queue_declare(queue=RABBITMQ_QUEUE, durable=True)
+            self.channel.queue_bind(
+                exchange=RABBITMQ_EXCHANGE,
+                queue=RABBITMQ_QUEUE,
+                routing_key=RABBITMQ_ROUTING_KEY
+            )
             
             # QoS: Nur 1 Nachricht gleichzeitig verarbeiten
             self.channel.basic_qos(prefetch_count=1)
             
             logger.info(f"Mit RabbitMQ verbunden ({RABBITMQ_HOST}:{RABBITMQ_PORT})")
+            logger.info(f"Exchange: {RABBITMQ_EXCHANGE}")
             logger.info(f"Queue: {RABBITMQ_QUEUE}")
+            logger.info(f"Routing-Key: {RABBITMQ_ROUTING_KEY}")
         except pika.exceptions.AMQPConnectionError as e:
             logger.error(f"RabbitMQ Verbindungsfehler: {e}")
             raise
