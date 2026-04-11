@@ -42,8 +42,8 @@ def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, descrip
 
 def sende_zahlungsauftrag(invoice_id, amount, currency, recipient):
     """
-    Schritt 2: Zahlungsauftrag als JSON in RabbitMQ ablegen.
-    Jetons Zahlungssystem holt ihn dort ab.
+    Schritt 2; Zahlungsauftrag als JSON in rabbitmq ablegen.
+    Zahlungssystem holt ihn dort ab.
     """
     # Nachricht im vereinbarten json format
     nachricht = {
