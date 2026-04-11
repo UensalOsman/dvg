@@ -1,0 +1,54 @@
+{
+  "users": [
+    {
+      "name": "admin",
+      "password_hash": "j7Rh0U7AiaNhyWQWdW6A1CY1rSjRFiAkxbMFT8q2xfaTwkZE",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "administrator"
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "admin",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "queues": [
+    {
+      "name": "payment-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "payment-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "payment-exchange",
+      "vhost": "/",
+      "destination": "payment-queue",
+      "destination_type": "queue",
+      "routing_key": "payment",
+      "arguments": {}
+    }
+  ]
+}
