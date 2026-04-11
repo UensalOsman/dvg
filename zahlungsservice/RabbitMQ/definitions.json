@@ -50,5 +50,8 @@
       "routing_key": "payment",
       "arguments": {}
     }
-  ]
+  ],
+  "policies": [],
+  "parameters": [],
+  "global_parameters": []
 }
