@@ -3,19 +3,14 @@ import json
 import pika
 from datetime import datetime
 
-import invoice_pb2
-import invoice_pb2_grpc
-
-
-GRPC_SERVER = "localhost:50051"          # Marios gRPC Server
-RABBITMQ_HOST = "localhost"              # RabbitMQ Docker Container
-RABBITMQ_QUEUE = "payment_queue"         # Name der Queue
+from protos import invoice_pb2,invoice_pb2_grpc
+from config import GRPC_SERVER, RABBITMQ_HOST, RABBITMQ_QUEUE
 
 
 def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, description):
     """
-    Schritt 1: Rechnung per gRPC an Marios Server schicken.
-    Gibt True zurück wenn erfolgreich, sonst False.
+    Schritt 1: Rechnung per grpc an grpc server schicken.
+    Gibt true zurück wenn erfolgreich, sonst false.
     """
     # Verbindung zum grpc server aufbauen
     channel = grpc.insecure_channel(GRPC_SERVER)
@@ -99,7 +94,7 @@ if __name__ == "__main__":
     DESCRIPTION = "Büromaterial März 2026"
 
     # Rechnung speichern
-    print("Schritt 1: Rechnung per gRPC speichern...")
+    print("Schritt 1: grpc funktion aufrufen zum speichern...")
     erfolg = speichere_rechnung(INVOICE_ID, SUPPLIER, AMOUNT, CURRENCY, DUE_DATE, DESCRIPTION)
 
     #wenn Speichern geklappt hat Zahlung auslösen
@@ -107,6 +102,6 @@ if __name__ == "__main__":
         print("\nSchritt 2: Zahlungsauftrag an RabbitMQ senden...")
         sende_zahlungsauftrag(INVOICE_ID, AMOUNT, CURRENCY, SUPPLIER)
     else:
-        print("\nZahlung wird NICHT ausgelöst (Rechnung konnte nicht gespeichert werden)")
+        print("\nZahlung wird NICHT ausgelöst")
 
     print("\n=== Fertig ===")
