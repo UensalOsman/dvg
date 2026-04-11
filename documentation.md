@@ -12,6 +12,6 @@ Nach Code Review und fehlerprüfung wurde das ganze dann eingecheckt und gepushe
 Github Weboberfläche stammen von GITHUB Copilot. Die Funktionsbeschreibungen im Code stammen von Github Copilot,
 wurden allerdings nach überprüfung teils manuell angepasst.
 
-### README.md
+### README.md Autor: Justin Perrone
 
 Diese File wurde mithilfe von Claude OPUS 4.6 erstellt und dann manuell angepasst.
