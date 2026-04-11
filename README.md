@@ -12,7 +12,8 @@ Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle D
 ```bash
 python -m venv venv
 
-.\venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1 -> Windows 
+source .venv/bin/activate -> Mac
 ```
 
 ### 2. Abhängigkeiten installieren

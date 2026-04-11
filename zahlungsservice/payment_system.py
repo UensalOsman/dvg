@@ -1,7 +1,6 @@
 import pika
 import pika.exceptions
 import json
-import sqlite3
 import logging
 from typing import Dict, Any
 from config import (
@@ -10,7 +9,6 @@ from config import (
     RABBITMQ_QUEUE,
     RABBITMQ_EXCHANGE,
     RABBITMQ_ROUTING_KEY,
-    DB_FILE,
     LOG_LEVEL,
 )
 
@@ -28,29 +26,7 @@ class PaymentSystem:
     def __init__(self):
         self.connection = None
         self.channel = None
-        self._init_database()
-    
-    def _init_database(self):
-        """SQLite Datenbank initialisieren"""
-        try:
-            with sqlite3.connect(DB_FILE) as conn:
-                conn.execute('''
-                    CREATE TABLE IF NOT EXISTS payments (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        invoice_id TEXT NOT NULL UNIQUE,
-                        amount REAL NOT NULL,
-                        currency TEXT NOT NULL,
-                        recipient TEXT NOT NULL,
-                        timestamp TEXT NOT NULL,
-                        status TEXT DEFAULT 'PENDING',
-                        created_at TEXT DEFAULT CURRENT_TIMESTAMP
-                    )
-                ''')
-            logger.info(f"Datenbank '{DB_FILE}' initialisiert")
-        except Exception as e:
-            logger.error(f"Datenbank-Fehler: {e}")
-            raise
-    
+
     def _validate_payment(self, data: Dict[str, Any]) -> tuple[bool, str]:
         """Zahlungsauftrag validieren"""
         required_fields = ["invoice_id", "amount", "currency", "recipient", "timestamp"]
@@ -75,30 +51,6 @@ class PaymentSystem:
 
         return True, "OK"
     
-    def _save_payment(self, data: Dict[str, Any]) -> bool:
-        """Zahlungsauftrag in SQLite speichern"""
-        try:
-            with sqlite3.connect(DB_FILE) as conn:
-                conn.execute('''
-                    INSERT INTO payments
-                    (invoice_id, amount, currency, recipient, timestamp, status)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (
-                    data["invoice_id"],
-                    data["amount"],
-                    data["currency"],
-                    data["recipient"],
-                    data["timestamp"],
-                    "PENDING"
-                ))
-            logger.info(f"Zahlung gespeichert: {data['invoice_id']}")
-            return True
-        except sqlite3.IntegrityError:
-            logger.warning(f"Zahlung existiert bereits: {data['invoice_id']}")
-            return False
-        except Exception as e:
-            logger.error(f"Fehler beim Speichern: {e}")
-            return False
     
     def _process_payment(self, data: Dict[str, Any]) -> bool:
         """Zahlungsauftrag verarbeiten"""
