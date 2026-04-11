@@ -9,21 +9,23 @@ db = InvoiceDB()
 class InvoiceServicer(invoice_pb2_grpc.InvoiceServiceServicer):
     
     def CreateInvoice(self, request, context):
-        db.create(request.invoice_id, request.supplier_name,
-                request.amount, request.date, request.description)
-        return invoice_pb2.SaveResponse(success=True, message="Invoice saved")
+        db.create(request.invoice_id, request.supplier,
+                request.amount, request.currency, request.due_date, request.description)
+        return invoice_pb2.InvoiceResponse(success=True, message="Rechnung gespeichert", invoice_id=request.invoice_id)
 
     def GetInvoice(self, request, context):
         row = db.get(request.invoice_id)
 
         if row:
-            return invoice_pb2.InvoiceMetadata(
-                invoice_id=row[0], supplier_name=row[1],
-                amount=row[2], date=row[3], description=row[4]
+            # row: (id, invoice_id, supplier, amount, currency, due_date, description, created_at)
+            return invoice_pb2.InvoiceResponse(
+                success=True,
+                message="Rechnung gefunden",
+                invoice_id=row[1]
             )
         context.set_code(grpc.StatusCode.NOT_FOUND)
-        context.set_details("Invoice not found")
-        return invoice_pb2.InvoiceMetadata()
+        context.set_details("Rechnung nicht gefunden")
+        return invoice_pb2.InvoiceResponse(success=False, message="Rechnung nicht gefunden")
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

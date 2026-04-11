@@ -6,6 +6,8 @@ from typing import Dict, Any
 from config import (
     RABBITMQ_HOST,
     RABBITMQ_PORT,
+    RABBITMQ_USER,
+    RABBITMQ_PASSWORD,
     RABBITMQ_QUEUE,
     RABBITMQ_EXCHANGE,
     RABBITMQ_ROUTING_KEY,
@@ -59,11 +61,7 @@ class PaymentSystem:
             logger.error(f"Validierungsfehler: {message}")
             return False
 
-        # 2. Speichern
-        if not self._save_payment(data):
-            return False
-
-        # 3. Loggen
+        # 2. Loggen
         logger.info(f"Zahlung verarbeitet: {data['invoice_id']} - {data['amount']} {data['currency']} an {data['recipient']}")
         return True
 
@@ -96,6 +94,7 @@ class PaymentSystem:
                 pika.ConnectionParameters(
                     host=RABBITMQ_HOST,
                     port=RABBITMQ_PORT,
+                    credentials=pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD),
                     connection_attempts=3,
                     retry_delay=2
                 )

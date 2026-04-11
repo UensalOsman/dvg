@@ -8,6 +8,8 @@ from config import (
     GRPC_SERVER,
     RABBITMQ_HOST,
     RABBITMQ_PORT,
+    RABBITMQ_USER,
+    RABBITMQ_PASSWORD,
     RABBITMQ_QUEUE,
     RABBITMQ_EXCHANGE,
     RABBITMQ_ROUTING_KEY,
@@ -64,7 +66,11 @@ def sende_zahlungsauftrag(invoice_id, amount, currency, recipient):
     try:
         # verbindung zu rabbitmq
         connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=RABBITMQ_HOST, port=RABBITMQ_PORT)
+            pika.ConnectionParameters(
+                host=RABBITMQ_HOST,
+                port=RABBITMQ_PORT,
+                credentials=pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
+            )
         )
         channel = connection.channel()
 
