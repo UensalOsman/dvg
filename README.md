@@ -15,14 +15,10 @@ Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle D
 
 ## Installation & Ausführung
  
-```bash
-pip install -r requirements.txt
-```
-
-
-1. Protofile erstellen (für den Vertrag zw. Client und Server) `python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. protos/invoice.proto`
-1. Docker Container starten: `docker run -d --name rabbitmq -p 5672:5672 rabbitmq`
-2. gRPC Server starten: `python server.py`
-3. Client ausführen: `python client.py`
+0. Abhängigkeiten installieren `pip install -r requirements.txt`
+1. Protofile erstellen  `python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. protos/invoice.proto`
+2. Docker Container starten: `docker run -d --name rabbitmq -p 5672:5672 rabbitmq`
+3. gRPC Server starten: `python server.py`
+4. Client ausführen: `python client.py`
 
 ![Sequenzdiagramm](seq_dia.png)
