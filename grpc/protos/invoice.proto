@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package invoice;
+
+// Die Rechnung die der Client schickt
+message InvoiceRequest {
+    string invoice_id = 1;       // z.B. "R-001"
+    string supplier = 2;         // z.B. "Firma X"
+    double amount = 3;           // z.B. 500.00
+    string currency = 4;         // z.B. "EUR"
+    string due_date = 5;         // z.B. "2026-05-01"
+    string description = 6;      // z.B. "Büromaterial März"
+}
+
+// Die Antwort vom Server
+message InvoiceResponse {
+    bool success = 1;
+    string message = 2;
+    string invoice_id = 3;
+}
+
+// Anfrage um eine Rechnung abzurufen
+message InvoiceId {
+    string invoice_id = 1;
+}
+
+// Die Funktionen die der Server anbietet
+service InvoiceService {
+    rpc CreateInvoice (InvoiceRequest) returns (InvoiceResponse);
+    rpc GetInvoice (InvoiceId) returns (InvoiceResponse);
+}
