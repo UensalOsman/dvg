@@ -4,7 +4,14 @@ import pika
 from datetime import datetime
 
 from protos import invoice_pb2,invoice_pb2_grpc
-from config import GRPC_SERVER, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_QUEUE
+from config import (
+    GRPC_SERVER,
+    RABBITMQ_HOST,
+    RABBITMQ_PORT,
+    RABBITMQ_QUEUE,
+    RABBITMQ_EXCHANGE,
+    RABBITMQ_ROUTING_KEY,
+)
 
 
 def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, description):
@@ -61,13 +68,23 @@ def sende_zahlungsauftrag(invoice_id, amount, currency, recipient):
         )
         channel = connection.channel()
 
-        # queue erstellen
+        # exchange + queue erstellen und binden
+        channel.exchange_declare(
+            exchange=RABBITMQ_EXCHANGE,
+            exchange_type="direct",
+            durable=True
+        )
         channel.queue_declare(queue=RABBITMQ_QUEUE, durable=True)
+        channel.queue_bind(
+            exchange=RABBITMQ_EXCHANGE,
+            queue=RABBITMQ_QUEUE,
+            routing_key=RABBITMQ_ROUTING_KEY
+        )
 
-        # nachricht in die queue schicken
+        # nachricht ueber exchange in die queue schicken
         channel.basic_publish(
-            exchange="",
-            routing_key=RABBITMQ_QUEUE,
+            exchange=RABBITMQ_EXCHANGE,
+            routing_key=RABBITMQ_ROUTING_KEY,
             body=json.dumps(nachricht),
             properties=pika.BasicProperties(
                 delivery_mode=2,  # Nachricht überlebt rabbitmq neustart
