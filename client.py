@@ -4,7 +4,7 @@ import pika
 from datetime import datetime
 
 from protos import invoice_pb2,invoice_pb2_grpc
-from config import GRPC_SERVER, RABBITMQ_HOST, RABBITMQ_QUEUE
+from config import GRPC_SERVER, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_QUEUE
 
 
 def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, description):
@@ -57,7 +57,7 @@ def sende_zahlungsauftrag(invoice_id, amount, currency, recipient):
     try:
         # verbindung zu rabbitmq
         connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=RABBITMQ_HOST)
+            pika.ConnectionParameters(host=RABBITMQ_HOST, port=RABBITMQ_PORT)
         )
         channel = connection.channel()
 
