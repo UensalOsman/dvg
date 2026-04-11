@@ -14,8 +14,6 @@ Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle D
 * **Containerisierung:** RabbitMQ läuft via Docker
 
 ## Installation & Ausführung
-
-## Setup
  
 ```bash
 pip install -r requirements.txt
