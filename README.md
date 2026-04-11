@@ -5,12 +5,6 @@ Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle D
 
 ![Architektur-Diagramm](images/dia.png)
 
-## Technologien
-* **Programmiersprache:** Python
-* **Kommunikation:** gRPC, RabbitMQ
-* **Datenbank:** SQLite
-* **Containerisierung:** RabbitMQ läuft via Docker
-
 ## Installation & Ausführung
 
 ### 1. Virtual Environment erstellen und aktivieren
