@@ -9,4 +9,5 @@ entstand durch händisches Programmieren, der resltiche funktionsinhalt wurde mi
 Die Struktur der Rechnungsanfrage (Invoice Request) wurde manuell von mir erstellt, die invoice.proto file basierend
 auf meinem Muster mithilfe von Claude OPUS 4.6 gebaut.
 Nach Code Review und fehlerprüfung wurde das ganze dann eingecheckt und gepushed. Die Namen der commits über die
-Github Weboberfläche stammen von GITHUB Copilot. Die Funktionsbeschreibungen im Code stammen von Github Copilot.
+Github Weboberfläche stammen von GITHUB Copilot. Die Funktionsbeschreibungen im Code stammen von Github Copilot,
+wurden allerdings nach überprüfung teils manuell angepasst.
