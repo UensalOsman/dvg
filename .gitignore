@@ -1,12 +1,16 @@
-protos/invoice_pb2.py
-protos/invoice_pb2_grpc.py
-protos/__pycache__/
+# Generierte gRPC Dateien
+**/protos/invoice_pb2.py
+**/protos/invoice_pb2_grpc.py
+**/protos/__pycache__/
 
+# Python
 __pycache__/
 *.pyc
 venv/
 
+# SQLite
 *.db
 
+# IDE
 .vscode/
 .idea/
