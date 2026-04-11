@@ -15,6 +15,14 @@ Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle D
 
 ## Installation & Ausführung
 
+## Setup
+ 
+```bash
+pip install -r requirements.txt
+```
+
+
+1. Protofile erstellen (für den Vertrag zw. Client und Server) `python -m grpc_tools.protoc --proto_path=protos --python_out=protos --grpc_python_out=protos protos/invoice.proto`
 1. Docker Container starten: `docker run -d --name rabbitmq -p 5672:5672 rabbitmq`
 2. gRPC Server starten: `python server.py`
 3. Client ausführen: `python client.py`
