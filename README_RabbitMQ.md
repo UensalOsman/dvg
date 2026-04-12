@@ -12,8 +12,8 @@ RabbitMQ läuft als Message Broker im Docker-Container und stellt den Nachrichte
 
 ```powershell
 cd zahlungsservice\RabbitMQ
-docker build -t rabbitmq .
-docker run -d -p 5672:5672 -p 15672:15672 rabbitmq
+docker build -t rabbitmq-dvg .
+docker run -d --name rabbitmq-dvg -p 5672:5672 -p 15672:15672 rabbitmq-dvg
 ```
 
 `-p` verbindet `Host-Port:Container-Port`. Hier: `5672:5672` (Nachrichten) und `15672:15672` (Web-Oberfläche).

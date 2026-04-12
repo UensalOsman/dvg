@@ -37,7 +37,9 @@ python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. protos/invoic
 ### 4. rabbitmq starten (Docker)
 
 ```bash
-docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
+cd zahlungsservice/RabbitMQ
+docker build -t rabbitmq-dvg .
+docker run -d --name rabbitmq-dvg -p 5672:5672 -p 15672:15672 rabbitmq-dvg
 ```
 
 ### 5. Services starten (jeweils in einem eigenen Terminal)
@@ -49,7 +51,7 @@ python server.py
 
 # Terminal 2: Zahlungsservice
 cd zahlungsservice
-python payment_consumer.py
+python payment_system.py
 
 # Terminal 3: Client ausführen
 cd client
