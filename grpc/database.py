@@ -5,7 +5,8 @@ from config import LOG_LEVEL
 # Logging konfigurieren
 logging.basicConfig(
     level=getattr(logging, LOG_LEVEL.upper(), logging.INFO),
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(filename)s:%(funcName)s - %(message)s',
+    datefmt='%H:%M:%S'
 )
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,7 @@ class InvoiceDB:
             connection.execute('''CREATE TABLE IF NOT EXISTS invoices (
                                id INTEGER PRIMARY KEY AUTOINCREMENT,
                                invoice_id TEXT NOT NULL UNIQUE,
+                               name TEXT NOT NULL UNIQUE,
                                supplier TEXT NOT NULL,
                                amount REAL NOT NULL,
                                currency TEXT NOT NULL,
@@ -30,31 +32,54 @@ class InvoiceDB:
                                description TEXT NOT NULL,
                                created_at TEXT DEFAULT CURRENT_TIMESTAMP
                                )''')
+        cursor = connection.execute("PRAGMA table_info(invoices)")
+        columns = [(row[0], row[1], row[2]) for row in cursor.fetchall()]
+        logger.info(f"Table columns: {columns}")
 
 
-    def create(self, invoice_id, supplier, amount, currency, due_date, description):
-        with sqlite3.connect(self.db_path) as conn:
-            conn.execute(
-                '''INSERT OR REPLACE INTO invoices
-                   (invoice_id, supplier, amount, currency, due_date, description)
-                   VALUES (?, ?, ?, ?, ?, ?)''',
-                (invoice_id, supplier, amount, currency, due_date, description)
-            )
-
+    def create(self, invoice_id, name, supplier, amount, currency, due_date, description):
+        try:
+            logging.info(f"Insert new invoice with ID: {invoice_id}")
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute(
+                    '''INSERT OR REPLACE INTO invoices
+                    (invoice_id, name, supplier, amount, currency, due_date, description)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                    (invoice_id, name, supplier, amount, currency, due_date, description)
+                )
+            logging.info(f"Invoice inserted or updated: {invoice_id}")
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Database error while creating invoice {invoice_id}: {e}")
+        except Exception as e:
+            logging.error(f"Unexpected error: {e}")
+            
 
     def get(self, invoice_id):
-        conn = sqlite3.connect(self.db_path)
-        row = conn.execute(
-            'SELECT * FROM invoices WHERE invoice_id = ?',
-            (invoice_id,)
-        ).fetchone()
+        try:
+            logging.info(f"Fetching invoice with ID: {invoice_id}")
+            conn = sqlite3.connect(self.db_path)
+            row = conn.execute(
+                'SELECT * FROM invoices WHERE invoice_id = ?',
+                (invoice_id,)
+            ).fetchone()
 
+            if row:
+                logger.info(f"Invoice found: {invoice_id}")
+                return row
+            else: 
+                logger.info(f"Invoice not found: {invoice_id}")
+            conn.close()
+
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Database error while fetching invoice {invoice_id} : {e}")
+
+    
+    def clear(self):
+        conn = sqlite3.connect(self.db_path)
+        conn.execute("DELETE FROM invoices")
+        conn.commit()
         conn.close()
-        if row:
-            logger.info(f"Rechnung gefunden: {invoice_id}")
-        else:
-            logger.warning(f"Rechnung nicht gefunden: {invoice_id}")
-        return row
+            
 
         
     

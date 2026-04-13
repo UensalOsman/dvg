@@ -15,10 +15,9 @@ from config import (
     RABBITMQ_ROUTING_KEY,
 )
 
-
-def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, description):
+def insert_invoice(name, supplier, amount, currency, due_date, description):
     """
-    Schritt 1: Rechnung per grpc an grpc server schicken.
+    Rechnung per grpc an grpc server schicken.
     Gibt true zurück wenn erfolgreich, sonst false.
     """
     # Verbindung zum grpc server aufbauen
@@ -27,7 +26,7 @@ def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, descrip
 
     # Request objekt erstellen (wie in der proto definiert)
     request = invoice_pb2.InvoiceRequest(
-        invoice_id=invoice_id,
+        name=name,
         supplier=supplier,
         amount=amount,
         currency=currency,
@@ -39,8 +38,26 @@ def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, descrip
         # Funktion auf dem server aufrufen
         response = stub.CreateInvoice(request)
         if response.success:
-            print(f"[gRPC] Rechnung {response.invoice_id} gespeichert: {response.message}")
-            return True
+            print(f"[gRPC] Rechnung {response.invoice_id}: {response.message}")
+            return response.invoice_id
+        else:
+            print(f"[gRPC] Fehler: {response.message}")
+            return False
+    except grpc.RpcError as e:
+        print(f"[gRPC] Server nicht erreichbar: {e.code().name}")
+        return False
+    
+
+def get_invoice(invoice_id):
+    channel = grpc.insecure_channel(GRPC_SERVER)
+    stub = invoice_pb2_grpc.InvoiceServiceStub(channel)
+
+    try:
+        request = invoice_pb2.InvoiceQuery(invoice_id=invoice_id)
+        response = stub.GetInvoice(request)
+        
+        if response.success:
+            print(f"[gRPC] Rechnung gefunden: {response.invoice_id}-{response.name}")
         else:
             print(f"[gRPC] Fehler: {response.message}")
             return False
@@ -48,15 +65,15 @@ def speichere_rechnung(invoice_id, supplier, amount, currency, due_date, descrip
         print(f"[gRPC] Server nicht erreichbar: {e.code().name}")
         return False
 
-
-def sende_zahlungsauftrag(invoice_id, amount, currency, recipient):
+def send_invoice(invoice_id, name, amount, currency, recipient):
     """
-    Schritt 2; Zahlungsauftrag als JSON in rabbitmq ablegen.
+    Zahlungsauftrag als JSON in rabbitmq ablegen.
     Zahlungssystem holt ihn dort ab.
     """
-    # Nachricht im vereinbarten json format
+
     nachricht = {
         "invoice_id": invoice_id,
+        "name": name,
         "amount": amount,
         "currency": currency,
         "recipient": recipient,
@@ -108,23 +125,43 @@ def sende_zahlungsauftrag(invoice_id, amount, currency, recipient):
 if __name__ == "__main__":
     print("=== Rechnungs-Client ===\n")
 
-    # Bsp Rechnung
-    INVOICE_ID = "R-001"
-    SUPPLIER = "Firma X"
-    AMOUNT = 500.00
-    CURRENCY = "EUR"
-    DUE_DATE = "2026-05-01"
-    DESCRIPTION = "Büromaterial März 2026"
+    try:
+        while True:
+            print("1 - Rechnung erstellen")
+            print("2 - Rechnung abrufen")
+            print("3 - Beenden")
+            choice = input("\nAuswahl: ")
 
-    # Rechnung speichern
-    print("Schritt 1: grpc funktion aufrufen zum speichern...")
-    erfolg = speichere_rechnung(INVOICE_ID, SUPPLIER, AMOUNT, CURRENCY, DUE_DATE, DESCRIPTION)
+            match choice:
+                case "1":
+                    NAME = input("Invoice Name: ")
+                    SUPPLIER = input("Supplier: ")
+                    AMOUNT = float(input("Amount: "))
+                    CURRENCY = "EUR"
+                    DUE_DATE = input("Due Date: ")
+                    DESCRIPTION = input("Description: ")
 
-    #wenn Speichern geklappt hat Zahlung auslösen
-    if erfolg:
-        print("\nSchritt 2: Zahlungsauftrag an RabbitMQ senden...")
-        sende_zahlungsauftrag(INVOICE_ID, AMOUNT, CURRENCY, SUPPLIER)
-    else:
-        print("\nZahlung wird NICHT ausgelöst")
+                    print("\nSchritt 1: Rechnung per gRPC speichern...")
+                    response_invoice_id = insert_invoice(NAME, SUPPLIER, AMOUNT, CURRENCY, DUE_DATE, DESCRIPTION)
 
-    print("\n=== Fertig ===")
+                    if response_invoice_id:
+                        print("\nSchritt 2: Zahlungsauftrag an RabbitMQ senden...")
+                        send_invoice(response_invoice_id, NAME, AMOUNT, CURRENCY, SUPPLIER)
+                    else:
+                        print("\nZahlung wird NICHT ausgelöst")
+
+                case "2":
+                    invoice_id = input("Invoice ID: ")
+                    get_invoice(invoice_id)
+
+                case "3":
+                    print("\n=== Client beendet ===")
+                    break
+
+                case _:
+                    print("Ungültige Auswahl, bitte 1-3 eingeben.")
+
+            print()
+
+    except KeyboardInterrupt:
+        print("\n\n=== Client beendet ===")
