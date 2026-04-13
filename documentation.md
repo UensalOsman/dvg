@@ -29,3 +29,7 @@ Fehlerbehandlung und Logging-Konfiguration.
 ### README.md Autor: Justin Perrone
 
 Diese File wurde mithilfe von Claude OPUS 4.6 erstellt und dann manuell angepasst.
+
+### definitions.json, Dockerfile, RabbitMQ.conf und README_RabbitMQ.md - Autor: Osman Ünsal
+
+Ich habe die Dateien definitions.json, Dockerfile, RabbitMQ.conf und README_RabbitMQ.md selbst erstellt und umgesetzt. Codex habe ich als Unterstützung bei der Umsetzung, Anpassung und Fehlerbehebung genutzt. Die Commits habe ich anschließend direkt über die PowerShell ausgeführt und in Github gepusht.
