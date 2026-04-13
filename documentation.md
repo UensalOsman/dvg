@@ -5,12 +5,26 @@
 
 Der Code in diesem Modul wurde kollaborativ mit KI entwickelt.
 Die Funktionsnamen im Modul client.py, die Struktur des Codes selbst sowie das erstellen der ausgelagerten config.py 
-entstand durch händisches Programmieren, der resltiche funktionsinhalt wurde mithilfe von Claude OPUS 4.6 erstellt.
+entstand durch händisches Programmieren, der restliche funktionsinhalt wurde mithilfe von Claude OPUS 4.6 erstellt.
 Die Struktur der Rechnungsanfrage (Invoice Request) wurde manuell von mir erstellt, die invoice.proto file basierend
 auf meinem Muster mithilfe von Claude OPUS 4.6 gebaut.
 Nach Code Review und fehlerprüfung wurde das ganze dann eingecheckt und gepushed. Die Namen der commits über die
 Github Weboberfläche stammen von GITHUB Copilot. Die Funktionsbeschreibungen im Code stammen von Github Copilot,
 wurden allerdings nach überprüfung teils manuell angepasst.
+
+### server.py - Autor: Mario Mansaku
+
+Der Code in diesem Modul wurde kollaborativ mit KI (Claude OPUS 4.6) entwickelt.
+Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
+KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), gRPC Server-/Client-Implementierung,
+Fehlerbehandlung und Logging-Konfiguration.
+
+### database.py - Autor: Mario Mansaku
+
+Der Code in diesem Modul wurde kollaborativ mit KI (Claude OPUS 4.6) entwickelt.
+Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
+KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), gRPC Server-/Client-Implementierung,
+Fehlerbehandlung und Logging-Konfiguration.
 
 ### README.md Autor: Justin Perrone
 
