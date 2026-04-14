@@ -31,3 +31,15 @@ Diese File wurde mithilfe von Claude OPUS 4.6 erstellt und dann manuell angepass
 ### definitions.json, Dockerfile, RabbitMQ.conf und README_RabbitMQ.md - Autor: Osman Ünsal
 
 Ich habe die Dateien definitions.json, Dockerfile, RabbitMQ.conf und README_RabbitMQ.md selbst erstellt und umgesetzt. Codex habe ich als Unterstützung bei der Umsetzung, Anpassung und Fehlerbehebung genutzt. Die Commits habe ich anschließend direkt über die PowerShell ausgeführt und in Github gepusht.
+
+### payment_system.py - Autor: Jeton
+Der Code in diesem Modul wurde kollaborativ mit KI (Claude HAIKU 4.5) entwickelt.
+Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
+KI wurde unterstützend eingesetzt für: RabbitMQ Consumer-Logik, SQLite Datenbankoperationen, 
+Validierungsfunktionen und Fehlerbehandlung (ACK/NACK). Nach Code Review und Fehlertests 
+wurde das Ganze eingecheckt und gepusht.
+
+### config.py (zahlungssystem/) - Autor: Jeton
+
+Die Config-Datei wurde eigenständig erstellt und lagert die RabbitMQ- und Datenbank-Einstellungen aus.
+Ermöglicht Konfiguration via Umgebungsvariablen.
