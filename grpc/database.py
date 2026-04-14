@@ -32,6 +32,8 @@ class InvoiceDB:
                                description TEXT NOT NULL,
                                created_at TEXT DEFAULT CURRENT_TIMESTAMP
                                )''')
+        
+        # Logging the table
         cursor = connection.execute("PRAGMA table_info(invoices)")
         columns = [(row[0], row[1], row[2]) for row in cursor.fetchall()]
         logger.info(f"Table columns: {columns}")

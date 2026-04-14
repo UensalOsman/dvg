@@ -16,15 +16,13 @@ wurden allerdings nach überprüfung teils manuell angepasst.
 
 Der Code in diesem Modul wurde kollaborativ mit KI (Claude OPUS 4.6) entwickelt.
 Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
-KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), gRPC Server-/Client-Implementierung,
-Fehlerbehandlung und Logging-Konfiguration.
+KI wurde unterstützend eingesetzt für: gRPC Server - serve() Methode, Fehlerbehandlung und Logging-Konfiguration.
 
 ### database.py - Autor: Mario Mansaku
 
 Der Code in diesem Modul wurde kollaborativ mit KI (Claude OPUS 4.6) entwickelt.
 Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
-KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), gRPC Server-/Client-Implementierung,
-Fehlerbehandlung und Logging-Konfiguration.
+KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), Fehlerbehandlung und Logging-Konfiguration.
 
 ### README.md Autor: Justin Perrone
 

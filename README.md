@@ -4,6 +4,7 @@ In diesem ersten Sprint des DVG-Moduls haben wir die Basiskomponenten für ein a
 Ziel ist es, Medienbrüche im aktuellen Prozess zu reduzieren und die manuelle Datenerfassung zu minimieren.
 
 ![Architektur-Diagramm](images/dia.png)
+![Sequenzdiagramm](images/seq_dia.png)
 
 ## Installation & Ausführung
 
@@ -70,4 +71,3 @@ python client.py
 }
 ```
 
-![Sequenzdiagramm](images/seq_dia.png)
