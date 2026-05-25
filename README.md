@@ -30,13 +30,6 @@ source .venv/bin/activate     # Mac
 pip install -r requirements.txt
 ```
 
-Für den Worker werden zusätzlich `pyzeebe` und `python-dotenv` benötigt
-(falls nicht bereits in requirements.txt enthalten):
-
-```bash
-pip install pyzeebe python-dotenv
-```
-
 ### 3. gRPC Vertrag generieren (für jeden service ordner einzeln)
 
 ```bash
@@ -85,9 +78,8 @@ selbst (Long Polling). Es ist keine eingehende Verbindung auf den Rechner nötig
 
 ### 6. Credentials hinterlegen (.env)
 
-Im Ordner `worker/` eine Datei `.env` anlegen (nicht committen!) mit den
-Cluster-Credentials aus der Camunda Console (Cluster → API → Client):
-
+Eine Datei `.env` im Root-Verzeichnis anlegen mit den
+Cluster-Credentials.
 ```
 ZEEBE_CLIENT_ID=...
 ZEEBE_CLIENT_SECRET=...
