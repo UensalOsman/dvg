@@ -57,7 +57,7 @@ def get_invoice(invoice_id):
         response = stub.GetInvoice(request)
         
         if response.success:
-            print(f"[gRPC] Rechnung gefunden: {response.invoice_id}-{response.name}")
+            print(f"[gRPC] Rechnung gefunden: {response.invoice_id} / {response.name}")
         else:
             print(f"[gRPC] Fehler: {response.message}")
             return False
