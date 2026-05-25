@@ -47,7 +47,7 @@ def insert_invoice(name, supplier, amount, currency, due_date, description):
         print(f"[gRPC] Server nicht erreichbar: {e.code().name}")
         return False
     
-
+# Exkurs - Nicht Sprint 1 relevant (Mario Mansaku)
 def get_invoice(invoice_id):
     channel = grpc.insecure_channel(GRPC_SERVER)
     stub = invoice_pb2_grpc.InvoiceServiceStub(channel)

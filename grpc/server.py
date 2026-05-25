@@ -30,7 +30,7 @@ class InvoiceServicer(invoice_pb2_grpc.InvoiceServiceServicer):
             message="Rechnung gespeichert", 
             invoice_id=invoice_id)
     
-
+    # Exkurs - Nicht Sprint 1 relevant (Mario Mansaku)
     def GetInvoice(self, request, context):
         row = db.get(request.invoice_id)
 
