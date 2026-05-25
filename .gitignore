@@ -10,7 +10,7 @@ venv/
 
 # SQLite
 *.db
-
+.env
 # IDE
 .vscode/
 .idea/

@@ -16,30 +16,55 @@ wurden allerdings nach überprüfung teils manuell angepasst.
 
 Der Code in diesem Modul wurde kollaborativ mit KI (Claude OPUS 4.6) entwickelt.
 Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
-KI wurde unterstützend eingesetzt für: gRPC Server - serve() Methode, Fehlerbehandlung und Logging-Konfiguration.
+KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), gRPC Server-/Client-Implementierung,
+Fehlerbehandlung und Logging-Konfiguration.
 
 ### database.py - Autor: Mario Mansaku
 
 Der Code in diesem Modul wurde kollaborativ mit KI (Claude OPUS 4.6) entwickelt.
 Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
-KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), Fehlerbehandlung und Logging-Konfiguration.
+KI wurde unterstützend eingesetzt für: Datenbanklogik (SQLite), gRPC Server-/Client-Implementierung,
+Fehlerbehandlung und Logging-Konfiguration.
 
 ### README.md Autor: Justin Perrone
 
 Diese File wurde mithilfe von Claude OPUS 4.6 erstellt und dann manuell angepasst.
 
-### definitions.json, Dockerfile, RabbitMQ.conf und README_RabbitMQ.md - Autor: Osman Ünsal
 
-Ich habe die Dateien definitions.json, Dockerfile, RabbitMQ.conf und README_RabbitMQ.md selbst erstellt und umgesetzt. Codex habe ich als Unterstützung bei der Umsetzung, Anpassung und Fehlerbehebung genutzt. Die Commits habe ich anschließend direkt über die PowerShell ausgeführt und in Github gepusht.
+## KI-Verwendung pro Sprint
 
-### payment_system.py - Autor: Jeton
-Der Code in diesem Modul wurde kollaborativ mit KI (Claude HAIKU 4.5) entwickelt.
-Die Projektstruktur, Funktionsnamen und der grundlegende Aufbau wurden eigenständig erstellt.
-KI wurde unterstützend eingesetzt für: RabbitMQ Consumer-Logik, SQLite Datenbankoperationen, 
-Validierungsfunktionen und Fehlerbehandlung (ACK/NACK). Nach Code Review und Fehlertests 
-wurde das Ganze eingecheckt und gepusht.
+### Sprint 2 – Process Mining mit Celonis
 
-### config.py (zahlungssystem/) - Autor: Jeton
+In diesem Sprint wurde Claude vor allem als Lernhilfe eingesetzt, um Celonis zu
+verstehen. Die eigentliche Analyse, die Auswahl der Daten und die Interpretation
+der Ergebnisse haben wir selbst durchgeführt. Claude haben wir genutzt, um die
+Funktionsweise des Tools zu erklären: welche Ansichten es gibt (z.B. Variant
+Explorer und Process Explorer), welche Funktionen zur Verfügung stehen, was ein
+Studio bzw. ein Data Pool ist und wie man Daten in Celonis einspeist und ein
+Datenmodell aufbaut. Die so gewonnenen Erklärungen haben wir anschließend selbst
+am konkreten Datensatz angewendet und die Bottleneck-Analyse eigenständig
+erstellt.
 
-Die Config-Datei wurde eigenständig erstellt und lagert die RabbitMQ- und Datenbank-Einstellungen aus.
-Ermöglicht Konfiguration via Umgebungsvariablen.
+### Sprint 3 – Soll-Prozess und BPMN-Modellierung
+
+Den Soll-Prozess haben wir selbst entworfen, fachlich definiert und in BPMN im
+Camunda Modeler modelliert. Die Optimierungen und Gateway-Entscheidungen wurden
+von uns aus der Sprint-2-Analyse abgeleitet. Claude wurde erst danach eingesetzt:
+Wir haben das fertige Modell vorgelegt und prüfen lassen, ob es fachlich und
+BPMN-technisch korrekt ist, und haben Hinweise und Verbesserungsvorschläge
+erhalten (z.B. zu Task-Typen und zur Schleifenlogik). Die Entscheidungen über
+Änderungen haben wir selbst getroffen.
+
+### Sprint 4 – Workflow-Implementierung und Job Worker
+
+Um die Funktionsweise der Zeebe Job Worker zu verstehen, haben wir Claude
+genutzt, um uns das zugrundeliegende Konzept erklären zu lassen (Pull- statt
+Push-Prinzip, Long Polling, Zusammenspiel von BPMN, Job Types und Worker sowie
+der Datenfluss über Process Variables). Auf dieser Grundlage haben wir die
+Worker-Logik selbst implementiert und an unsere Sprint-1-Komponenten angebunden.
+Die Datei test_connection.py zum Prüfen der Cluster-Verbindung wurde von Claude
+OPUS 4.6 erstellt. Bei der Worker-Implementierung half Claude zudem bei der
+Lösung eines Windows-spezifischen Problems mit dem asyncio-Event-Loop sowie bei
+der Klärung des Variablen-Mappings zwischen Camunda-Formular, Worker und den
+Sprint-1-Funktionen. Code und Konzepte wurden vor der Übernahme jeweils geprüft
+und nachvollzogen.
