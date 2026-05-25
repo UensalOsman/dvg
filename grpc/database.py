@@ -24,7 +24,7 @@ class InvoiceDB:
             connection.execute('''CREATE TABLE IF NOT EXISTS invoices (
                                id INTEGER PRIMARY KEY AUTOINCREMENT,
                                invoice_id TEXT NOT NULL UNIQUE,
-                               name TEXT NOT NULL UNIQUE,
+                               invoice_name TEXT NOT NULL UNIQUE,
                                supplier TEXT NOT NULL,
                                amount REAL NOT NULL,
                                currency TEXT NOT NULL,
@@ -39,15 +39,15 @@ class InvoiceDB:
         logger.info(f"Table columns: {columns}")
 
 
-    def create(self, invoice_id, name, supplier, amount, currency, due_date, description):
+    def create(self, invoice_id, invoice_name, supplier, amount, currency, due_date, description):
         try:
             logging.info(f"Insert new invoice with ID: {invoice_id}")
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
                     '''INSERT OR REPLACE INTO invoices
-                    (invoice_id, name, supplier, amount, currency, due_date, description)
+                    (invoice_id, invoice_name, supplier, amount, currency, due_date, description)
                     VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                    (invoice_id, name, supplier, amount, currency, due_date, description)
+                    (invoice_id, invoice_name, supplier, amount, currency, due_date, description)
                 )
             logging.info(f"Invoice inserted or updated: {invoice_id}")
         except sqlite3.DatabaseError as e:
@@ -78,7 +78,7 @@ class InvoiceDB:
     
     def clear(self):
         conn = sqlite3.connect(self.db_path)
-        conn.execute("DELETE FROM invoices")
+        conn.execute("DROP TABLE IF EXISTS invoices")
         conn.commit()
         conn.close()
             

@@ -15,7 +15,7 @@ from config import (
     RABBITMQ_ROUTING_KEY,
 )
 
-def insert_invoice(name, supplier, amount, currency, due_date, description):
+def insert_invoice(invoice_name, supplier, amount, currency, due_date, description):
     """
     Rechnung per grpc an grpc server schicken.
     Gibt true zurück wenn erfolgreich, sonst false.
@@ -26,7 +26,7 @@ def insert_invoice(name, supplier, amount, currency, due_date, description):
 
     # Request objekt erstellen (wie in der proto definiert)
     request = invoice_pb2.InvoiceRequest(
-        name=name,
+        invoice_name=invoice_name,
         supplier=supplier,
         amount=amount,
         currency=currency,
@@ -65,7 +65,7 @@ def get_invoice(invoice_id):
         print(f"[gRPC] Server nicht erreichbar: {e.code().name}")
         return False
 
-def send_invoice(invoice_id, name, amount, currency, recipient):
+def send_invoice(invoice_id, invoice_name, amount, currency, recipient):
     """
     Zahlungsauftrag als JSON in rabbitmq ablegen.
     Zahlungssystem holt ihn dort ab.
@@ -73,7 +73,7 @@ def send_invoice(invoice_id, name, amount, currency, recipient):
 
     nachricht = {
         "invoice_id": invoice_id,
-        "name": name,
+        "name": invoice_name,
         "amount": amount,
         "currency": currency,
         "recipient": recipient,
