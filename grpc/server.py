@@ -22,7 +22,7 @@ class InvoiceServicer(invoice_pb2_grpc.InvoiceServiceServicer):
          # Server generiert die ID
         invoice_id = f"Invoice-{uuid.uuid4().hex[:6].upper()}"
 
-        db.create(invoice_id, request.invoice_name, request.supplier,
+        db.create(invoice_id, request.invoice_name, request.vendor,
                 request.amount, request.currency, request.due_date, request.description)
         
         return invoice_pb2.InvoiceResponse(

@@ -15,7 +15,7 @@ from config import (
     RABBITMQ_ROUTING_KEY,
 )
 
-def insert_invoice(invoice_name, supplier, amount, currency, due_date, description):
+def insert_invoice(invoice_name, vendor, amount, currency, due_date, description):
     """
     Rechnung per grpc an grpc server schicken.
     Gibt true zurück wenn erfolgreich, sonst false.
@@ -27,7 +27,7 @@ def insert_invoice(invoice_name, supplier, amount, currency, due_date, descripti
     # Request objekt erstellen (wie in der proto definiert)
     request = invoice_pb2.InvoiceRequest(
         invoice_name=invoice_name,
-        supplier=supplier,
+        vendor=vendor,
         amount=amount,
         currency=currency,
         due_date=due_date,
@@ -135,18 +135,18 @@ if __name__ == "__main__":
             match choice:
                 case "1":
                     NAME = input("Invoice Name: ")
-                    SUPPLIER = input("Supplier: ")
+                    VENDOR = input("Vendor Name: ")
                     AMOUNT = float(input("Amount: "))
                     CURRENCY = "EUR"
                     DUE_DATE = input("Due Date: ")
                     DESCRIPTION = input("Description: ")
 
                     print("\nSchritt 1: Rechnung per gRPC speichern...")
-                    response_invoice_id = insert_invoice(NAME, SUPPLIER, AMOUNT, CURRENCY, DUE_DATE, DESCRIPTION)
+                    response_invoice_id = insert_invoice(NAME, VENDOR, AMOUNT, CURRENCY, DUE_DATE, DESCRIPTION)
 
                     if response_invoice_id:
                         print("\nSchritt 2: Zahlungsauftrag an RabbitMQ senden...")
-                        send_invoice(response_invoice_id, NAME, AMOUNT, CURRENCY, SUPPLIER)
+                        send_invoice(response_invoice_id, NAME, AMOUNT, CURRENCY, VENDOR)
                     else:
                         print("\nZahlung wird NICHT ausgelöst")
 

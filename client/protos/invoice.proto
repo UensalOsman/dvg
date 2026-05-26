@@ -5,7 +5,7 @@ package invoice;
 // Die Rechnung die der Client schickt
 message InvoiceRequest {
     string invoice_name = 1;            
-    string supplier = 2;         
+    string vendor = 2;         
     double amount = 3;          
     string currency = 4;         
     string due_date = 5;         

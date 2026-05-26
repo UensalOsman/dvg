@@ -34,9 +34,10 @@ JOB_TYPE_PAYMENT = os.environ["JOB_TYPE_PAYMENT"]
 router = ZeebeTaskRouter()
 
 # Handler zum Metadaten speichern
+# @router.task = Wenn ein Zeebe Auftrag vom Typ JOB_TYPE_METADATA eintrifft, führe handle_save_metadata aus
 @router.task(task_type=JOB_TYPE_METADATA)  
 async def handle_save_metadata(
-    supplier: str,
+    vendor: str,
     amount: float,
     dueDate: str,
     invoiceName: str,
@@ -44,16 +45,16 @@ async def handle_save_metadata(
     description: str = "",
     channel: str = "",
 ):
-    log.info("Job '%s' empfangen: supplier=%s, amount=%s, invoiceName=%s",
-             JOB_TYPE_METADATA, supplier, amount, invoiceName)
+    log.info("Job '%s' empfangen: vendor=%s, amount=%s, invoiceName=%s",
+             JOB_TYPE_METADATA, vendor, amount, invoiceName)
 
     invoice_id = insert_invoice(
         invoice_name=invoiceName,
-        supplier=supplier,
+        vendor=vendor,
         amount=amount,
         currency=currency,
         due_date=dueDate,
-        description=f"{description}. Rechnung von {supplier}, Eingangskanal {channel}",
+        description=f"{description}. Rechnung von {vendor}, Eingangskanal {channel}",
     )
 
     if not invoice_id:
@@ -70,23 +71,24 @@ async def handle_save_metadata(
 
 
 #Handler zum Zahlungsverkehr ausführen
+# @router.task = Wenn ein Zeebe Auftrag vom Typ JOB_TYPE_PAYMENT eintrifft, führe handle_execute_payment aus
 @router.task(task_type=JOB_TYPE_PAYMENT) 
 async def handle_execute_payment(
-    supplier: str,
+    vendor: str,
     amount: float,
     invoiceName: str,
     invoiceId: str,
     currency: str,
 ):
-    log.info("Job '%s' empfangen: invoiceId=%s, supplier=%s, amount=%s",
-             JOB_TYPE_PAYMENT, invoiceId, supplier, amount)
+    log.info("Job '%s' empfangen: invoiceId=%s, vendor=%s, amount=%s",
+             JOB_TYPE_PAYMENT, invoiceId, vendor, amount)
 
     ok = send_invoice(
         invoice_id=invoiceId,
         invoice_name=invoiceName,
         amount=amount,
         currency=currency,
-        recipient=supplier,
+        recipient=vendor,
     )
 
     # send_invoice() gibt True bei Erfolg, False bei RabbitMQ-Problemen.
@@ -97,7 +99,7 @@ async def handle_execute_payment(
     log.info("Zahlungsauftrag gesendet fuer invoice_id=%s", invoiceId)
     return {"paymentSent": True}
 
-#Worker starten
+# Worker starten
 async def main():
     log.info("Worker startet, verbindet sich mit Camunda Cluster...")
     channel = create_camunda_cloud_channel(
@@ -107,6 +109,8 @@ async def main():
         region=os.environ["ZEEBE_REGION"],
     )
     worker = ZeebeWorker(channel)
+
+    # Fügt die Router Aufgaben zum Worker hinzu
     worker.include_router(router)
     log.info("Lausche auf Job Types: '%s' und '%s'",
              JOB_TYPE_METADATA, JOB_TYPE_PAYMENT)
