@@ -46,11 +46,6 @@ class PaymentSystem:
         except (ValueError, TypeError):
             return False, "Betrag muss eine Zahl sein"
 
-        # Währung prüfen (ISO 4217: 3 Grossbuchstaben)
-        currency = data.get("currency")
-        if not isinstance(currency, str) or len(currency) != 3 or not currency.isupper():
-            return False, "Waehrung muss ein 3-stelliger ISO-Code in Grossbuchstaben sein (z.B. EUR)"
-
         return True, "OK"
         
     def _process_payment(self, data: Dict[str, Any]) -> bool:
