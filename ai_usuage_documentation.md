@@ -30,16 +30,6 @@ Fehlerbehandlung und Logging-Konfiguration.
 
 Diese File wurde mithilfe von Claude OPUS 4.6 erstellt und dann manuell angepasst.
 
-
-### ui/app.py & ui/templates/ – Autor: Jeton Rama
-
-Die Web-UI für die manuelle Rechnungserfassung wurde kollaborativ mit KI (Claude Sonnet 4.6) entwickelt.
-Projektstruktur, Anforderungsanalyse und die Entscheidung für Flask sowie die Camunda-Anbindung
-über die Zeebe REST API v2 wurden eigenständig erarbeitet. KI wurde eingesetzt für:
-die Implementierung der Flask-Routen, die HTML/CSS-Gestaltung der ERP-Oberfläche,
-die Integration der Camunda Tasklist- und Zeebe REST API sowie die start.sh/stop.sh-Skripte.
-Der Code wurde nach Review und manuellem Testen eingecheckt und gepusht.
-
 ## KI-Verwendung pro Sprint
 
 ### Sprint 2 – Process Mining mit Celonis
