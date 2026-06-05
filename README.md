@@ -1,4 +1,4 @@
-# Rechnungsverarbeitungssystem (Sprint 1 + Sprint 4)
+# DVG-Semester Projekt
 
 In Sprint 1 wurden die Basiskomponenten für ein automatisiertes
 Rechnungsverarbeitungssystem entwickelt (gRPC-Service, Zahlungssystem über
