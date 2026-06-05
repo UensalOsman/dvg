@@ -37,24 +37,36 @@ router = ZeebeTaskRouter()
 # @router.task = Wenn ein Zeebe Auftrag vom Typ JOB_TYPE_METADATA eintrifft, führe handle_save_metadata aus
 @router.task(task_type=JOB_TYPE_METADATA)  
 async def handle_save_metadata(
-    vendor: str,
-    amount: float,
-    dueDate: str,
     invoiceName: str,
+    invoiceDate: str,
+    supplierName: str,
+    vendorNumber: str,
+    customerNumber: str,
+    amount: float,
     currency: str,
+    dueDate: str,
     description: str = "",
-    channel: str = "",
+    positions: list = "[]",
 ):
-    log.info("Job '%s' empfangen: vendor=%s, amount=%s, invoiceName=%s",
-             JOB_TYPE_METADATA, vendor, amount, invoiceName)
+    positions = positions or []
 
+    for i, p in enumerate(positions, start=1):
+        p["position_no"] = i
+
+    log.info("Job '%s' empfangen: vendor=%s, amount=%s, %d Positionen",
+             JOB_TYPE_METADATA, vendorNumber, amount, len(positions))
+    
     invoice_id = insert_invoice(
         invoice_name=invoiceName,
-        vendor=vendor,
+        invoice_date=invoiceDate,
+        supplier_name=supplierName,
+        vendor_number=vendorNumber,
+        customer_number = customerNumber,
         amount=amount,
         currency=currency,
         due_date=dueDate,
-        description=f"{description}. Rechnung von {vendor}, Eingangskanal {channel}",
+        description=f"{description}. Rechnung von {supplierName}.",
+        positions=positions,  
     )
 
     if not invoice_id:
@@ -74,21 +86,21 @@ async def handle_save_metadata(
 # @router.task = Wenn ein Zeebe Auftrag vom Typ JOB_TYPE_PAYMENT eintrifft, führe handle_execute_payment aus
 @router.task(task_type=JOB_TYPE_PAYMENT) 
 async def handle_execute_payment(
-    vendor: str,
+    vendorNumber: str,
     amount: float,
     invoiceName: str,
     invoiceId: str,
     currency: str,
 ):
-    log.info("Job '%s' empfangen: invoiceId=%s, vendor=%s, amount=%s",
-             JOB_TYPE_PAYMENT, invoiceId, vendor, amount)
+    log.info("Job '%s' empfangen: invoiceId=%s, vendorNumber=%s, amount=%s",
+             JOB_TYPE_PAYMENT, invoiceId, vendorNumber, amount)
 
     ok = send_invoice(
         invoice_id=invoiceId,
         invoice_name=invoiceName,
         amount=amount,
         currency=currency,
-        recipient=vendor,
+        vendor_number=vendorNumber,
     )
 
     # send_invoice() gibt True bei Erfolg, False bei RabbitMQ-Problemen.

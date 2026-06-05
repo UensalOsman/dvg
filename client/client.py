@@ -15,7 +15,8 @@ from config import (
     RABBITMQ_ROUTING_KEY,
 )
 
-def insert_invoice(invoice_name, vendor, amount, currency, due_date, description):
+def insert_invoice(invoice_name, invoice_date, supplier_name, vendor_number, customer_number, 
+                   amount, currency, due_date, description, positions=None):
     """
     Rechnung per grpc an grpc server schicken.
     Gibt true zurück wenn erfolgreich, sonst false.
@@ -24,14 +25,30 @@ def insert_invoice(invoice_name, vendor, amount, currency, due_date, description
     channel = grpc.insecure_channel(GRPC_SERVER)
     stub = invoice_pb2_grpc.InvoiceServiceStub(channel)
 
+    proto_positions = [
+        invoice_pb2.Position(
+            position_no=p["position_no"],
+            article=p["article"],
+            quantity=p["quantity"],
+            unit=p.get("unit", ""),
+            unit_price_net=p["unit_price_net"],
+            tax_rate=p["tax_rate"],
+        )
+        for p in positions
+    ]
+
     # Request objekt erstellen (wie in der proto definiert)
     request = invoice_pb2.InvoiceRequest(
         invoice_name=invoice_name,
-        vendor=vendor,
+        invoice_date = invoice_date,
+        supplier_name=supplier_name,
+        vendor_number=vendor_number,
+        customer_number=customer_number,
         amount=amount,
         currency=currency,
         due_date=due_date,
         description=description,
+        positions=proto_positions
     )
 
     try:
@@ -65,7 +82,7 @@ def get_invoice(invoice_id):
         print(f"[gRPC] Server nicht erreichbar: {e.code().name}")
         return False
 
-def send_invoice(invoice_id, invoice_name, amount, currency, recipient):
+def send_invoice(invoice_id, invoice_name, amount, currency, vendor_number):
     """
     Zahlungsauftrag als JSON in rabbitmq ablegen.
     Zahlungssystem holt ihn dort ab.
@@ -76,7 +93,7 @@ def send_invoice(invoice_id, invoice_name, amount, currency, recipient):
         "name": invoice_name,
         "amount": amount,
         "currency": currency,
-        "recipient": recipient,
+        "vendor_number": vendor_number,
         "timestamp": datetime.now().isoformat(),
     }
 

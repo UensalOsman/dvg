@@ -31,7 +31,7 @@ class PaymentSystem:
 
     def _validate_payment(self, data: Dict[str, Any]) -> tuple[bool, str]:
         """Zahlungsauftrag validieren"""
-        required_fields = ["invoice_id", "amount", "currency", "recipient", "timestamp"]
+        required_fields = ["invoice_id", "amount", "currency", "vendor_number", "timestamp"]
 
         # Pflichtfelder prüfen
         for field in required_fields:
@@ -57,7 +57,7 @@ class PaymentSystem:
             return False
 
         # 2. Loggen
-        logger.info(f"Zahlung verarbeitet: {data['invoice_id']} - {data['amount']} {data['currency']} an {data['recipient']}")
+        logger.info(f"Zahlung verarbeitet: {data['invoice_id']} - {data['amount']} {data['currency']} an {data['vendor_number']}")
         return True
 
     def _callback(self, ch, method, properties, body):

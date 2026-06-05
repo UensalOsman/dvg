@@ -19,16 +19,37 @@ db = InvoiceDB()
 class InvoiceServicer(invoice_pb2_grpc.InvoiceServiceServicer):
     
     def CreateInvoice(self, request, context):
-         # Server generiert die ID
+        # Server generiert die ID
         invoice_id = f"Invoice-{uuid.uuid4().hex[:6].upper()}"
 
-        db.create(invoice_id, request.invoice_name, request.vendor,
-                request.amount, request.currency, request.due_date, request.description)
-        
+        positions = [
+            {
+                "position_no":    p.position_no,
+                "article":        p.article,
+                "quantity":       p.quantity,
+                "unit":           p.unit,
+                "unit_price_net": p.unit_price_net,
+                "tax_rate":       p.tax_rate,
+            }
+            for p in request.positions
+        ]
+
+        db.create(
+            invoice_id, request.invoice_name, request.invoice_date, request.supplier_name, request.vendor_number,
+            request.customer_number, request.amount, request.currency,
+            request.due_date, request.description,
+            positions=positions,       
+        )
+
         return invoice_pb2.InvoiceResponse(
-            success=True, 
-            message="Rechnung gespeichert", 
-            invoice_id=invoice_id)
+            success=True,
+            message="Rechnung gespeichert",
+            invoice_id=invoice_id,
+            invoice_name=request.invoice_name,
+            supplier_name=request.supplier_name,
+            amount=request.amount,
+            currency=request.currency,
+        )
     
     # Exkurs - Nicht Sprint 1 relevant (Mario Mansaku)
     def GetInvoice(self, request, context):
@@ -37,7 +58,6 @@ class InvoiceServicer(invoice_pb2_grpc.InvoiceServiceServicer):
         if not row:
             return invoice_pb2.InvoiceResponse(
                 success=False,
-                message="Rechnung nicht gefunden",
             )
         
         return invoice_pb2.InvoiceResponse(
