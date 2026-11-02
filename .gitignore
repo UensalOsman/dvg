@@ -1,23 +1,6 @@
-# Generierte gRPC Dateien
-**/protos/invoice_pb2.py
-**/protos/invoice_pb2_grpc.py
-**/protos/__pycache__/
-
-# Python
+.venv/
+.runtime/
 __pycache__/
+.pytest_cache/
 *.pyc
-venv/
-
-# SQLite
-*.db
-.env
-# IDE
-.vscode/
-.idea/
-
-
-# env
-.env
-
-# Logs
-.logs/
+.tmp/

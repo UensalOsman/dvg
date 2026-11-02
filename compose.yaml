@@ -1,0 +1,50 @@
+name: shopeasy-sprint2-rabbitmq
+
+services:
+  broker:
+    image: rabbitmq:4.3.7-management
+    hostname: shopeasy-broker
+    environment:
+      RABBITMQ_DEFAULT_USER: osman
+      RABBITMQ_DEFAULT_PASS: passwort
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    volumes:
+      - broker-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_port_connectivity"]
+      interval: 5s
+      timeout: 5s
+      retries: 18
+      start_period: 20s
+    stop_grace_period: 30s
+
+  app:
+    image: shopeasy-sprint2-rabbitmq-app:local
+    build: .
+    environment:
+      SHOPEASY_BROKER_HOST: broker
+      SHOPEASY_BIND_HOST: 0.0.0.0
+      SHOPEASY_DATA_DIR: /data
+      SHOPEASY_BROKER_USER: osman
+      SHOPEASY_BROKER_PASSWORD: passwort
+    ports:
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:50051:50051"
+    volumes:
+      - app-data:/data
+    depends_on:
+      broker:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; health=json.load(urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=2)); assert health['broker_connected'] and health['consumer_connected']"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    stop_grace_period: 20s
+
+volumes:
+  broker-data:
+  app-data:

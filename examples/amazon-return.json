@@ -1,0 +1,8 @@
+{
+  "marketplace": "AMAZON",
+  "external_return_id": "AMAZON-DEMO-001",
+  "order_id": "BESTELLUNG-DEMO-001",
+  "sku": "SHIRT-BLAU-M",
+  "quantity": 1,
+  "reason": "Groesse passt nicht"
+}
